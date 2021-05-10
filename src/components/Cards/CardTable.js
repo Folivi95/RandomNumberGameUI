@@ -21,13 +21,23 @@ export default function CardTable({ color }) {
     await axios(requestOptions)
       .then(
         res => {
-          toast.success(`${res.data.message}`);
-          setMatches(res.data.data);
+          if(res.data) {
+            toast.success(`${res.data.message}`);
+            setMatches(res.data.data);
+          }
+          else {
+            toast.error('Failed to retrieve matches.')
+          }
         }
       )
       .catch(
         err => {
-          toast.error(`${err.response.data.Message}`);
+          if(err.response) {
+            toast.error(`${err.response.data.Message}`);
+          }
+          else {
+            toast.error('Failed to retrieve matches.')
+          }
         }
       );
   }
@@ -54,13 +64,17 @@ export default function CardTable({ color }) {
       await axios(reqOpt)
       .then(
         res => {
-          toast.success(`${res.data.message}`);
-          setTimeout(() => window.location.reload(), 1000);
+          if(res.data) {
+            toast.success(`${res.data.message}`);
+            setTimeout(() => window.location.reload(), 1000);
+          }
         }
       )
         .catch(
           err => {
-            toast.error(`${err.response.data.Message}. Please login`);
+            if(err.response) {
+              toast.error(`${err.response.data.Message}. Please login`);
+            }
           }
         );
     }
@@ -182,6 +196,7 @@ export default function CardTable({ color }) {
                     <button
                       className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
                       type="button"
+                      hidden={e.userScore > 0}
                       onClick={() => {localStorage.setItem('matchId', e.id); playGame();}}
                     >
                       Play Now
